@@ -44,7 +44,7 @@ jobs:
       - run: 
           name: Run test
           command: |
-            docker rm app
+            docker rm app | true
             docker create -v /app --name app app /bin/true
             docker cp . app:/app
             docker run --volumes-from app app /bin/bash -c './init.sh && ./test.sh'
