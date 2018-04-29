@@ -9,6 +9,9 @@ jobs:
       - image: docker:17.05.0-ce-git
     steps:
       - checkout
+      - run:
+          name: Initialize git submodules
+          command: git submodule update --init --recursive
       - setup_remote_docker
       - run:
           name: Install dependencies
@@ -41,20 +44,20 @@ jobs:
           key: wav2midi-{{ .Branch }}-{{ epoch }}
           paths:
             - /caches/app.tar
-      - run: 
+      - run:
           name: Remove app_files container
           command: |
             set +o pipefail
             docker rm -f app_files | true
-      - run: 
+      - run:
           name: Create app_files container
           command: |
             docker create -v /app --name app_files app /bin/true
-      - run: 
+      - run:
           name: Copy current files to app_files container
           command: |
             docker cp . app_files:/app
-      - run: 
+      - run:
           name: Run test
           command: |
             docker run --volumes-from app_files app /bin/bash -c './init.sh && ./test.sh'
