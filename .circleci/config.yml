@@ -1,0 +1,50 @@
+---
+# @see CircleCI 2.0 Beta における Docker イメージのビルド - Lambdar http://lambdar.hatenablog.com/entry/2017/04/18/084900
+# @see Mounting Folders - Running Docker Commands - CircleCI https://circleci.com/docs/2.0/building-docker-images/#mounting-folders
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache \
+              py-pip=9.0.0-r1
+            pip install \
+              docker-compose==1.12.0 \
+              awscli==1.11.76
+      - restore_cache:
+          keys:
+            - wav2midi-{{ .Branch }}
+          paths:
+            - /caches/app.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/app.tar | true
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build --cache-from=app -t app .
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/app.tar app
+      - save_cache:
+          key: wav2midi-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/app.tar
+      - run: 
+          name: Run test
+          command: |
+            docker rm app
+            docker create -v /app --name app app /bin/true
+            docker cp . app:/app
+            docker run --volumes-from app app /bin/bash -c './init.sh && ./test.sh'

@@ -1,5 +1,4 @@
-#!/usr/bin/env cmake -P
-cmake_minimum_required(VERSION 3.11.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 set(build_dir ${CMAKE_CURRENT_LIST_DIR}/gen)
 cmake_host_system_information(RESULT core_size QUERY NUMBER_OF_LOGICAL_CORES)

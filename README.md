@@ -1,5 +1,7 @@
 # wav2midi
 
+[![CircleCI](https://circleci.com/gh/mrk21/wav2midi.svg?style=svg)](https://circleci.com/gh/mrk21/wav2midi)
+
 wav2midi is in order to convert sound wave to scale.
 
 ## Dependencies
@@ -29,7 +31,7 @@ $ brew install cmake
 ```bash
 $ mkdir gen
 $ cd gen
-$ cmake -DCMAKE_CXX_COMPILER=clang++ ..
+$ cmake -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TEST=ON ..
 ```
 
 ## Build
@@ -49,5 +51,5 @@ $ ./src/main
 ## Test
 
 ```bash
-./cmake.test [test_target]
+./test.sh [test_target]
 ```
