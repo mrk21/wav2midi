@@ -42,9 +42,19 @@ jobs:
           paths:
             - /caches/app.tar
       - run: 
+          name: Remove app_files container
+          command: |
+            set +o pipefail
+            docker rm -f app_files | true
+      - run: 
+          name: Create app_files container
+          command: |
+            docker create -v /app --name app_files app /bin/true
+      - run: 
+          name: Copy current files to app_files container
+          command: |
+            docker cp . app_files:/app
+      - run: 
           name: Run test
           command: |
-            docker rm app | true
-            docker create -v /app --name app app /bin/true
-            docker cp . app:/app
-            docker run --volumes-from app app /bin/bash -c './init.sh && ./test.sh'
+            docker run --volumes-from app_files app /bin/bash -c './init.sh && ./test.sh'
