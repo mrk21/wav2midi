@@ -23,7 +23,7 @@ add_dependencies(vendor_develop vendor_product)
 # Libraries
 # -----------------------------------------------------------------------------
 # boost
-find_package(Boost 1.67 REQUIRED system thread)
+find_package(Boost 1.65 REQUIRED)
 append_project_var(vendor_product_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 append_project_var(vendor_product_LIBRARIES ${Boost_LIBRARIES})
 

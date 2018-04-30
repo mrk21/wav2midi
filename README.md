@@ -16,7 +16,7 @@ wav2midi is in order to convert sound wave to scale.
 
 ### Libraries
 
-* [Boost (BSL-1.0)](https://www.boost.org/): `>= 1.6.7`
+* [Boost (BSL-1.0)](https://www.boost.org/): `>= 1.6.5`
 * [libsndfile (LGPL-2.1)](https://github.com/erikd/libsndfile): `>= 1.0.0`
 * [bandit (MIT)](https://github.com/banditcpp/bandit): `>= 2.0.0`
 
