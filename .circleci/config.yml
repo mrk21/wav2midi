@@ -25,7 +25,7 @@ jobs:
               docker-compose==1.20.0 \
               awscli==1.11.76
 
-      # cache
+      # cache and build
       - restore_cache:
           keys:
             - wav2midi-{{ .Branch }}
