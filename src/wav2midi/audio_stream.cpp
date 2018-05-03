@@ -2,6 +2,8 @@
 #include <array>
 
 namespace wav2midi {
+    audio_stream::volume::volume() : data{0} {}
+
     audio_stream::audio_stream(std::string path) {
         this->file = sf_open(path.c_str(), SFM_READ, &this->info);
     }

@@ -10,10 +10,10 @@ RUN apt-get update -qq && \
     apt-get install -y build-essential tree vim less && \
     apt-get install -y --no-install-recommends apt-utils
 
-# - CMake 3.10
+# CMake 3.10
 RUN apt-get install -y cmake
 
-# - Clang 5.0
+# Clang 5.0
 # @see clang - Install libc++ on ubuntu - Stack Overflow https://stackoverflow.com/questions/39332406/install-libc-on-ubuntu
 # @see c++ - Clang doesn't see basic headers - Stack Overflow https://stackoverflow.com/questions/26333823/clang-doesnt-see-basic-headers
 RUN apt-get install -y \
@@ -33,10 +33,11 @@ RUN apt-get install -y \
   && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-5.0 100 \
   && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-5.0 100
 
-# - Boost 1.65
+# Boost 1.65
 RUN apt-get install -y \
   libboost-all-dev
 
+# libsndfile 1.0
 RUN apt-get install -y \
   libsndfile1 \
   libsndfile1-dev

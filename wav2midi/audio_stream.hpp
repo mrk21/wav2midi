@@ -7,12 +7,13 @@ namespace wav2midi {
     public:
         union volume {
             int data[2];
+
             struct {
                 alignas(int) int l;
                 alignas(int) int r;
             } channel;
 
-            volume() : data{0} {}
+            volume();
         };
 
         using read_callback = std::function<void(std::size_t, const volume &)>;

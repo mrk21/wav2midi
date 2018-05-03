@@ -14,6 +14,11 @@ wav2midi is in order to convert sound wave to scale.
     * GCC: `>= 7.0.0`
 * CMake: `>= 3.10.0`
 
+### Development tools
+
+* docker
+* direnv
+
 ### Libraries
 
 * [Boost (BSL-1.0)](https://www.boost.org/): `>= 1.6.5`

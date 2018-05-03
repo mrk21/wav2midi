@@ -35,3 +35,6 @@ CTestTestfile.cmake
 .DS_Store
 *.swp
 gen/
+
+# direnv
+.envrc.local

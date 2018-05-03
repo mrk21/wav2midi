@@ -1,8 +1,11 @@
 ---
-version: '3'
+version: '3.5'
 services:
   app:
     build: .
     command: /bin/bash -c "./init.sh && ./test.sh"
     volumes:
-      - .:/app
+      - ${DOCKER_HOST_APP_VOLUME}:/app
+volumes:
+  app:
+    driver: local
