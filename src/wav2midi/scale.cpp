@@ -12,7 +12,9 @@ namespace wav2midi {
         this->frequency = 27.5 * pow(2.0, n / 12.0);
         this->name = (boost::format(item::names[this->local_no]) % this->octave).str();
     }
+}
 
+namespace wav2midi {
     const std::vector<std::string> scale::item::names{{
         "A%02d",
         "A#%02d",

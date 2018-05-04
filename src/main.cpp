@@ -30,9 +30,9 @@ int main() {
         }
         std::cout << "========================" << std::endl;
 
-        auto scale_item = scale.match(max_freq);
+        auto item = scale.match(max_freq);
 
-        std::cout << scale_item.name << ": " << max_freq << "Hz => "<< max_amp << std::endl;
+        std::cout << item.name << ": " << max_freq << "Hz => "<< max_amp << std::endl;
 
         return false;
     });

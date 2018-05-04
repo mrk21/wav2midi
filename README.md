@@ -16,8 +16,10 @@ wav2midi is in order to convert sound wave to scale.
 
 ### Development tools
 
-* docker
 * direnv
+* docker: `>=  17.x.x`
+* docker-compose: `>= 1.20.0`
+* clang-tidy: `>= 5.0.0`
 
 ### Libraries
 
