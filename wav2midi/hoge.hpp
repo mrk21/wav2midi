@@ -1,3 +1,6 @@
+#ifndef WAV2MIDI_HOGE_HPP
+#define WAV2MIDI_HOGE_HPP
+
 #include <string>
 
 namespace wav2midi {
@@ -6,3 +9,5 @@ namespace wav2midi {
         std::string str();
     };
 }
+
+#endif

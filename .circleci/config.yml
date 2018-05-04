@@ -28,7 +28,7 @@ jobs:
       # cache and build
       - restore_cache:
           keys:
-            - wav2midi-{{ .Branch }}
+            - wav2midi-docker-{{ checksum "Dockerfile" }}
           paths:
             - /caches/wav2midi.tar
       - run:
@@ -46,7 +46,7 @@ jobs:
             mkdir -p /caches
             docker save -o /caches/wav2midi.tar wav2midi_app
       - save_cache:
-          key: wav2midi-{{ .Branch }}-{{ epoch }}
+          key: wav2midi-docker-{{ checksum "Dockerfile" }}
           paths:
             - /caches/wav2midi.tar
 

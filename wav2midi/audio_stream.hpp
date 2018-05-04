@@ -1,3 +1,6 @@
+#ifndef WAV2MIDI_AUDIO_STREAM_HPP
+#define WAV2MIDI_AUDIO_STREAM_HPP
+
 #include <sndfile.h>
 #include <string>
 #include <functional>
@@ -15,3 +18,5 @@ namespace wav2midi {
         SNDFILE * file;
     };
 }
+
+#endif
