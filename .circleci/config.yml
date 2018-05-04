@@ -31,6 +31,7 @@ jobs:
             - wav2midi-docker-{{ checksum "Dockerfile" }}
           paths:
             - /caches/wav2midi.tar
+            - /caches/dockerfile-checksum
       - run:
           name: Load Docker image layer cache
           command: |
@@ -43,12 +44,26 @@ jobs:
       - run:
           name: Save Docker image layer cache
           command: |
+            set +o pipefail
             mkdir -p /caches
-            docker save -o /caches/wav2midi.tar wav2midi_app
+
+            NEW_CHECKSUM=`cksum Dockerfile | cut -f1 -d ' '`
+
+            if [ -f /caches/dockerfile-checksum ]; then
+              CHECKSUM=`cat /caches/dockerfile-checksum`
+            fi
+
+            if [ "${NEW_CHECKSUM}" != "${CHECKSUM}" ]; then
+              echo "${NEW_CHECKSUM}" > /caches/dockerfile-checksum
+              docker save -o /caches/wav2midi.tar wav2midi_app
+            fi
+
+            true
       - save_cache:
           key: wav2midi-docker-{{ checksum "Dockerfile" }}
           paths:
             - /caches/wav2midi.tar
+            - /caches/dockerfile-checksum
 
       # run test
       - run:
