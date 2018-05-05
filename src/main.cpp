@@ -1,5 +1,5 @@
 #include <wav2midi/audio_stream.hpp>
-#include <wav2midi/dft.hpp>
+#include <wav2midi/fft.hpp>
 #include <wav2midi/scale.hpp>
 #include <iostream>
 #include <fstream>
@@ -10,7 +10,7 @@ int main() {
     wav2midi::scale scale;
 
     as.read(std::pow(2, 12), [&scale, &ofs](auto f_s) {
-        auto F_s = wav2midi::dft().execute(f_s);
+        auto F_s = wav2midi::fft(f_s).execute();
         const auto N = F_s.size();
         auto max_amp = 0;
         auto max_freq = 0.0;
