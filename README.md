@@ -84,3 +84,7 @@ $ ./src/main
 ```bash
 ./test.sh [test_target]
 ```
+
+## More documentation
+
+* [wav2midi 方針・設計 | mrk21 Kibela](https://mrk21.kibe.la/shared/entries/3931bfea-0f31-4aa1-9e72-b7cd6f010697)
