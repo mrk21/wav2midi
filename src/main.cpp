@@ -6,19 +6,22 @@
 #include <cstdio>
 #include <boost/format.hpp>
 
-int main() {
+int main(int argc, char * argv[]) {
+    std::string path = argc == 1 ? "/dev/stdin" : argv[1];
+    std::cout << "Read from " << path << std::endl;;
+
     FILE * gnuplot = popen("gnuplot", "w");
     fprintf(gnuplot, "set tmargin 5\n");
     fprintf(gnuplot, "set bmargin 5\n");
     fprintf(gnuplot, "set rmargin 8\n");
     fprintf(gnuplot, "set lmargin 8\n");
     fprintf(gnuplot, "set xrange [160:2000]\n");
-    fprintf(gnuplot, "set yrange [0:800]\n");
+    fprintf(gnuplot, "set yrange [0:200]\n");
     fprintf(gnuplot, "plot 0\n");
     fflush(gnuplot);
 
     while (true) {
-        wav2midi::audio_stream as("../test/fixture/sound/octave4.wav");
+        wav2midi::audio_stream as(path);
         wav2midi::scale scale;
 
         as.read(std::pow(2, 12), [&gnuplot, &scale](auto f_s) {
@@ -46,7 +49,7 @@ int main() {
                 std::cout << "========================" << std::endl;
             }
             auto item = scale.match(max_freq);
-            auto label = (boost::format("%s: %f Hz => %f") % item.name % max_freq % max_amp).str();
+            auto label = (boost::format("%f [Hz]: %f => %s: %f [Hz]") % max_freq % max_amp % item.name % item.frequency).str();
             std::cout << label << std::endl;
             fprintf(gnuplot, "plot 'data.dat' using 1:2 with lines\n");
             fprintf(gnuplot, "set label 1 at screen 0.05, 0.05 \"%s\"\n", label.c_str());
@@ -55,12 +58,17 @@ int main() {
             return false;
         });
 
-        std::cout << "=====================================================================" << std::endl;
-        std::cout << "You can finish this program when you entered \"q\"; otherwise you can retry this program." << std::endl;
-        std::cout << ">> ";
-        std::string command;
-        std::cin >> command;
-        if (command == "q") break;
+        if (path == "/dev/stdin") {
+            break;
+        }
+        else {
+            std::cout << "=====================================================================" << std::endl;
+            std::cout << "You can finish this program when you entered \"q\"; otherwise you can retry this program." << std::endl;
+            std::cout << ">> ";
+            std::string command;
+            std::cin >> command;
+            if (command == "q") break;
+        }
     }
 
     fclose(gnuplot);

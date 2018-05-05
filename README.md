@@ -13,6 +13,8 @@ wav2midi is in order to convert sound wave to scale.
     * Clang: `>= 5.0.0`
     * GCC: `>= 7.0.0`
 * CMake: `>= 3.10.0`
+* gnuplot
+* ffmpeg
 
 ### Development tools
 
@@ -74,10 +76,26 @@ $ make
 
 ## Run
 
+### Input from file
+
 ```bash
 $ cd gen
-$ ./src/main
+$ ./src/main /path/to/sound.wav
 ```
+
+### Input from microphone(line in)
+
+If you will input from microphone or line in, specify `/dev/stdin` and use `ffmpeg`.
+If you used macOS, enter the command like listed below:
+
+```sh
+$ cd gen
+$ ffmpeg -f avfoundation -i "none:0" -f wav pipe:1 | ./src/main
+```
+
+**Refer to:**
+
+* [FFmpeg Devices Documentation](https://www.ffmpeg.org/ffmpeg-devices.html#avfoundation)
 
 ## Test
 
