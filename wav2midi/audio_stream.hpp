@@ -11,7 +11,6 @@ namespace wav2midi {
         using read_callback = std::function<bool(std::vector<double>)>;
 
         audio_stream(std::string path);
-        audio_stream(FILE * popen);
         void read(std::size_t n, read_callback block);
 
     private:

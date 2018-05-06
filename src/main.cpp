@@ -10,21 +10,45 @@ int main(int argc, char * argv[]) {
     std::string path = argc == 1 ? "/dev/stdin" : argv[1];
     std::cout << "Read from " << path << std::endl;;
 
-    FILE * gnuplot = popen("gnuplot", "w");
-    fprintf(gnuplot, "set tmargin 5\n");
-    fprintf(gnuplot, "set bmargin 5\n");
-    fprintf(gnuplot, "set rmargin 8\n");
-    fprintf(gnuplot, "set lmargin 8\n");
-    fprintf(gnuplot, "set xrange [20:5000]\n");
-    fprintf(gnuplot, "set yrange [0:1000]\n");
-    fprintf(gnuplot, "plot 0\n");
-    fflush(gnuplot);
+    FILE * wave_gnuplot = popen("gnuplot", "w");
+    fprintf(wave_gnuplot, "set title '{/=16 Wave}'\n");
+    fprintf(wave_gnuplot, "set tmargin 5\n");
+    fprintf(wave_gnuplot, "set bmargin 5\n");
+    fprintf(wave_gnuplot, "set rmargin 8\n");
+    fprintf(wave_gnuplot, "set lmargin 8\n");
+    fprintf(wave_gnuplot, "set xrange [0:0.046]\n");
+    fprintf(wave_gnuplot, "set yrange [-0.5:0.5]\n");
+    fprintf(wave_gnuplot, "plot 0\n");
+    fflush(wave_gnuplot);
+
+    FILE * fft_gnuplot = popen("gnuplot", "w");
+    fprintf(fft_gnuplot, "set title '{/=16 FFT}'\n");
+    fprintf(fft_gnuplot, "set tmargin 5\n");
+    fprintf(fft_gnuplot, "set bmargin 5\n");
+    fprintf(fft_gnuplot, "set rmargin 8\n");
+    fprintf(fft_gnuplot, "set lmargin 8\n");
+    fprintf(fft_gnuplot, "set xrange [0:5000]\n");
+    fprintf(fft_gnuplot, "set yrange [0:500]\n");
+    fprintf(fft_gnuplot, "plot 0\n");
+    fflush(fft_gnuplot);
 
     while (true) {
         wav2midi::audio_stream as(path);
         wav2midi::scale scale;
 
-        as.read(std::pow(2, 12), [&gnuplot, &scale](auto f_s) {
+        as.read(std::pow(2, 12), [&wave_gnuplot, &fft_gnuplot, &scale](auto f_s) {
+            {
+                std::ofstream ofs("wave.dat");
+
+                for (auto x = 0u; x < f_s.size(); ++x) {
+                    auto t = x * 1.0 / (44.1 * 1000);
+                    auto amp = f_s[x];
+                    ofs << t << " " << amp << std::endl;
+                }
+                fprintf(wave_gnuplot, "plot 'wave.dat' using 1:2 with lines\n");
+                fflush(wave_gnuplot);
+            }
+
             auto F_s = wav2midi::fft(f_s).execute();
             const auto N = F_s.size();
             const auto threshold_amp = 50;
@@ -32,7 +56,7 @@ int main(int argc, char * argv[]) {
             auto max_freq = 0.0;
 
             {
-                std::ofstream ofs("data.dat");
+                std::ofstream ofs("fft.dat");
 
                 auto k_f = [N](double f) -> uint32_t { return std::round(f / (44.1 * 1000) * N); };
                 auto k_begin = k_f(scale[0].frequency);
@@ -70,10 +94,10 @@ int main(int argc, char * argv[]) {
                 % max_amp
             ).str();
             std::cout << label << std::endl;
-            fprintf(gnuplot, "plot 'data.dat' using 1:2 with lines\n");
-            fprintf(gnuplot, "set label 1 at screen 0.05, 0.05 \"%s\"\n", gp_label1.c_str());
-            fprintf(gnuplot, "set label 2 at screen 0.65, 0.05 \"%s\"\n", gp_label2.c_str());
-            fflush(gnuplot);
+            fprintf(fft_gnuplot, "plot 'fft.dat' using 1:2 with lines\n");
+            fprintf(fft_gnuplot, "set label 1 at screen 0.05, 0.05 '%s'\n", gp_label1.c_str());
+            fprintf(fft_gnuplot, "set label 2 at screen 0.65, 0.05 '%s'\n", gp_label2.c_str());
+            fflush(fft_gnuplot);
 
             return false;
         });
@@ -83,7 +107,7 @@ int main(int argc, char * argv[]) {
         }
         else {
             std::cout << "=====================================================================" << std::endl;
-            std::cout << "You can finish this program when you entered \"q\"; otherwise you can retry this program." << std::endl;
+            std::cout << "You can finish this program when you entered 'q'; otherwise you can retry this program." << std::endl;
             std::cout << ">> ";
             std::string command;
             std::cin >> command;
@@ -91,6 +115,7 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    fclose(gnuplot);
+    fclose(fft_gnuplot);
+    fclose(wave_gnuplot);
     return 0;
 }

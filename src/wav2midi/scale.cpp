@@ -38,7 +38,7 @@ namespace wav2midi {
 
     const scale::item & scale::operator [](uint32_t n) const {
         static item unknown{0};
-        return 0u <= n && n < 88u ? items[n] : unknown;
+        return n < 88u ? items[n] : unknown;
     }
 
     const scale::item & scale::match(double f) const {
