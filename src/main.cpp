@@ -1,6 +1,7 @@
 #include <wav2midi/audio_stream.hpp>
 #include <wav2midi/fft.hpp>
 #include <wav2midi/scale.hpp>
+#include <wav2midi/gnuplot.hpp>
 #include <iostream>
 #include <fstream>
 #include <cstdio>
@@ -10,27 +11,25 @@ int main(int argc, char * argv[]) {
     std::string path = argc == 1 ? "/dev/stdin" : argv[1];
     std::cout << "Read from " << path << std::endl;;
 
-    FILE * wave_gnuplot = popen("gnuplot", "w");
-    fprintf(wave_gnuplot, "set title '{/=16 Wave}'\n");
-    fprintf(wave_gnuplot, "set tmargin 5\n");
-    fprintf(wave_gnuplot, "set bmargin 5\n");
-    fprintf(wave_gnuplot, "set rmargin 8\n");
-    fprintf(wave_gnuplot, "set lmargin 8\n");
-    fprintf(wave_gnuplot, "set xrange [0:0.046]\n");
-    fprintf(wave_gnuplot, "set yrange [-0.5:0.5]\n");
-    fprintf(wave_gnuplot, "plot 0\n");
-    fflush(wave_gnuplot);
+    wav2midi::gnuplot wave_gnuplot;
+    wave_gnuplot.command("set title '{/=16 Wave}'");
+    wave_gnuplot.command("set tmargin 5");
+    wave_gnuplot.command("set bmargin 5");
+    wave_gnuplot.command("set rmargin 8");
+    wave_gnuplot.command("set lmargin 8");
+    wave_gnuplot.command("set xrange [0:0.046]");
+    wave_gnuplot.command("set yrange [-0.5:0.5]");
+    wave_gnuplot.open();
 
-    FILE * fft_gnuplot = popen("gnuplot", "w");
-    fprintf(fft_gnuplot, "set title '{/=16 FFT}'\n");
-    fprintf(fft_gnuplot, "set tmargin 5\n");
-    fprintf(fft_gnuplot, "set bmargin 5\n");
-    fprintf(fft_gnuplot, "set rmargin 8\n");
-    fprintf(fft_gnuplot, "set lmargin 8\n");
-    fprintf(fft_gnuplot, "set xrange [0:5000]\n");
-    fprintf(fft_gnuplot, "set yrange [0:500]\n");
-    fprintf(fft_gnuplot, "plot 0\n");
-    fflush(fft_gnuplot);
+    wav2midi::gnuplot fft_gnuplot;
+    fft_gnuplot.command("set title '{/=16 FFT}'");
+    fft_gnuplot.command("set tmargin 5");
+    fft_gnuplot.command("set bmargin 5");
+    fft_gnuplot.command("set rmargin 8");
+    fft_gnuplot.command("set lmargin 8");
+    fft_gnuplot.command("set xrange [0:5000]");
+    fft_gnuplot.command("set yrange [0:500]");
+    fft_gnuplot.open();
 
     while (true) {
         wav2midi::audio_stream as(path);
@@ -45,8 +44,8 @@ int main(int argc, char * argv[]) {
                     auto amp = f_s[x];
                     ofs << t << " " << amp << std::endl;
                 }
-                fprintf(wave_gnuplot, "plot 'wave.dat' using 1:2 with lines\n");
-                fflush(wave_gnuplot);
+                wave_gnuplot.command("plot 'wave.dat' using 1:2 with lines");
+                wave_gnuplot.flush();
             }
 
             auto F_s = wav2midi::fft(f_s).execute();
@@ -94,10 +93,10 @@ int main(int argc, char * argv[]) {
                 % max_amp
             ).str();
             std::cout << label << std::endl;
-            fprintf(fft_gnuplot, "plot 'fft.dat' using 1:2 with lines\n");
-            fprintf(fft_gnuplot, "set label 1 at screen 0.05, 0.05 '%s'\n", gp_label1.c_str());
-            fprintf(fft_gnuplot, "set label 2 at screen 0.65, 0.05 '%s'\n", gp_label2.c_str());
-            fflush(fft_gnuplot);
+            fft_gnuplot.command("plot 'fft.dat' using 1:2 with lines");
+            fft_gnuplot.command("set label 1 at screen 0.05, 0.05 '%s'", gp_label1);
+            fft_gnuplot.command("set label 2 at screen 0.65, 0.05 '%s'", gp_label2);
+            fft_gnuplot.flush();
 
             return false;
         });
@@ -115,7 +114,5 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    fclose(fft_gnuplot);
-    fclose(wave_gnuplot);
     return 0;
 }
