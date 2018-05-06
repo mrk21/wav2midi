@@ -7,8 +7,8 @@ namespace wav2midi {
     scale::item::item(uint32_t n) {
         using namespace std;
         this->n = n;
-        this->local_no = (n + 9) % 12;
-        this->octave = (n + 9) / 12;
+        this->local_no = n % 12u;
+        this->octave = (n + 9u) / 12u;
         this->frequency = 27.5 * pow(2.0, n / 12.0);
         this->name = (boost::format(item::names[this->local_no]) % this->octave).str();
     }
@@ -16,18 +16,18 @@ namespace wav2midi {
 
 namespace wav2midi {
     const std::vector<std::string> scale::item::names{{
-        "A%02d",
-        "A#%02d",
-        "B%02d",
-        "C%02d",
-        "C#%02d",
-        "D%02d",
-        "D#%02d",
-        "E%02d",
-        "F%02d",
-        "F#%02d",
-        "G%02d",
-        "G#%02d",
+        "A%d",
+        "A#%d",
+        "B%d",
+        "C%d",
+        "C#%d",
+        "D%d",
+        "D#%d",
+        "E%d",
+        "F%d",
+        "F#%d",
+        "G%d",
+        "G#%d",
     }};
 
     scale::scale() {
@@ -37,11 +37,12 @@ namespace wav2midi {
     }
 
     const scale::item & scale::operator [](uint32_t n) const {
-        return items[n];
+        static item unknown{0};
+        return 0u <= n && n < 88u ? items[n] : unknown;
     }
 
     const scale::item & scale::match(double f) const {
-        return items[f_to_n(f)];
+        return (*this)[f_to_n(f)];
     }
 
     uint32_t scale::f_to_n(double f) const {
