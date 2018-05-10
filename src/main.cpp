@@ -1,5 +1,6 @@
 #include <wav2midi/audio_stream.hpp>
-#include <wav2midi/fft.hpp>
+#include <wav2midi/fft/fft.hpp>
+#include <wav2midi/fft/window.hpp>
 #include <wav2midi/scale.hpp>
 #include <wav2midi/gnuplot.hpp>
 #include <iostream>
@@ -48,7 +49,7 @@ int main(int argc, char * argv[]) {
                 wave_gnuplot.flush();
             }
 
-            auto F_s = wav2midi::fft(f_s).execute();
+            auto F_s = wav2midi::fft::fft(f_s, wav2midi::fft::window::flat_top).execute();
             const auto N = F_s.size();
             const auto threshold_amp = 50;
             auto max_amp = 0.0;

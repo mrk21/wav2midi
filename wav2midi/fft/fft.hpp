@@ -1,23 +1,20 @@
-#ifndef WAV2MIDI_FFT_HPP
-#define WAV2MIDI_FFT_HPP
+#ifndef WAV2MIDI_FFT_FFT_HPP
+#define WAV2MIDI_FFT_FFT_HPP
 
+#include <wav2midi/fft/window.hpp>
 #include <vector>
 #include <complex>
 #include <iterator>
 #include <algorithm>
 
-namespace wav2midi {
+namespace wav2midi::fft {
     class fft {
     public:
-        template<typename CollectionType>
-        fft(const CollectionType & f) {
-            std::copy(f.begin(), f.end(), std::back_inserter(x));
-        }
-
+        fft(const std::vector<double> & f, window::window_t w = window::hanning);
         const std::vector<std::complex<double>> & execute();
 
     private:
-        std::complex<double> W(uint32_t n, std::size_t N);
+        std::complex<double> W(std::size_t N, uint32_t n);
         void fft_(std::vector<std::complex<double>> & x, std::size_t N);
 
         std::vector<std::complex<double>> x;
