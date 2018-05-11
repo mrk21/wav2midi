@@ -103,6 +103,14 @@ $ ffmpeg -f avfoundation -i "none:0" -f wav pipe:1 | ./src/main
 ./test.sh [test_target]
 ```
 
+## Other
+
+This project coding styles follow C++ Standard Libraries and Boost C++ Libraries basically.
+
+**Refer to:**
+
+* [Boost Library Requirements and Guidelines](https://www.boost.org/development/requirements.html)
+
 ## More documentation
 
 * [wav2midi 方針・設計 | mrk21 Kibela](https://mrk21.kibe.la/shared/entries/3931bfea-0f31-4aa1-9e72-b7cd6f010697)

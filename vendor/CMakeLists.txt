@@ -1,14 +1,5 @@
 include(ExternalProject)
 
-macro(set_project_var name)
-  set(${name} ${ARGN})
-  set(${name} ${ARGN} PARENT_SCOPE)
-endmacro()
-
-macro(append_project_var name)
-  set_project_var(${name} ${${name}} ${ARGN})
-endmacro()
-
 # -----------------------------------------------------------------------------
 # Custom target
 # -----------------------------------------------------------------------------

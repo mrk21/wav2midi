@@ -14,8 +14,8 @@ namespace wav2midi {
         void read(std::size_t n, read_callback block);
 
     private:
-        SF_INFO info;
-        SNDFILE * file;
+        SF_INFO info_;
+        SNDFILE * file_;
     };
 }
 

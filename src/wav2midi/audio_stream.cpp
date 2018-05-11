@@ -5,7 +5,7 @@
 
 namespace wav2midi {
     audio_stream::audio_stream(std::string path) {
-        this->file = sf_open(path.c_str(), SFM_READ, &this->info);
+        file_ = sf_open(path.c_str(), SFM_READ, &info_);
     }
 
     void audio_stream::read(std::size_t n, read_callback block) {
@@ -13,10 +13,10 @@ namespace wav2midi {
         std::vector<double> volumes;
 
         while (true) {
-            const std::size_t readcount = sf_readf_double(this->file, &buffer[0][0], buffer.size());
+            const std::size_t readcount = sf_readf_double(file_, &buffer[0][0], buffer.size());
             if (readcount == 0) break;
 
-            std::for_each(buffer.cbegin(), buffer.cbegin() + readcount, [&volumes](const auto & v) {
+            std::for_each(buffer.begin(), buffer.begin() + readcount, [&volumes](const auto & v) {
                 volumes.push_back(v[0]);
             });
 

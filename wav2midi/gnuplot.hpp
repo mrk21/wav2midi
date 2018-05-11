@@ -16,12 +16,12 @@ namespace wav2midi {
         template<typename ... T>
         void command(const std::string & cmd, const T ... params) {
             auto formatted_cmd = (boost::format(cmd) % ... % params);
-            std::fprintf(pipe, "%s\n", formatted_cmd.str().c_str());
-            std::fflush(pipe);
+            std::fprintf(pipe_, "%s\n", formatted_cmd.str().c_str());
+            std::fflush(pipe_);
         }
 
     private:
-        FILE * pipe;
+        FILE * pipe_;
     };
 }
 

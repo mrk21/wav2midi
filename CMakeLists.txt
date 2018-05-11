@@ -34,6 +34,18 @@ endif()
 execute_process(COMMAND git submodule update --init --recursive WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 # -----------------------------------------------------------------------------
+# helpers
+# -----------------------------------------------------------------------------
+macro(set_project_var name)
+  set(${name} ${ARGN})
+  set(${name} ${ARGN} PARENT_SCOPE)
+endmacro()
+
+macro(append_project_var name)
+  set_project_var(${name} ${${name}} ${ARGN})
+endmacro()
+
+# -----------------------------------------------------------------------------
 # build settings
 # -----------------------------------------------------------------------------
 set(LIB_NAME wav2midi)
@@ -42,5 +54,6 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 enable_testing()
 add_subdirectory(vendor)
+add_subdirectory(wav2midi)
 add_subdirectory(src)
 add_subdirectory(test)

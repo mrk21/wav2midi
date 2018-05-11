@@ -2,11 +2,11 @@
 
 namespace wav2midi {
     gnuplot::gnuplot() {
-        pipe = popen("gnuplot", "w");
+        pipe_ = popen("gnuplot", "w");
     }
 
     gnuplot::~gnuplot() {
-        pclose(pipe);
+        pclose(pipe_);
     }
 
     void gnuplot::open() {
@@ -15,6 +15,6 @@ namespace wav2midi {
     }
 
     void gnuplot::flush() {
-        std::fflush(pipe);
+        std::fflush(pipe_);
     }
 }
